@@ -1,0 +1,99 @@
+\documentclass[12pt]{article}
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm
+\textheight 21cm
+%\footskip 1.0cm
+
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{media9}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage[backend=bibtex]{biblatex}
+\bibliography{rtgf19}{}
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+\title{Establishing consistency and robustness of neural networks for large data sets}
+
+\author{Alexa Aucoin$^{1}$ \\ \normalsize{$^{1}$Department of Mathematics, University of Arizona}}
+
+
+
+% Include the date command, but leave its argument blank.
+
+\date{\today}
+
+
+
+%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
+
+
+
+\begin{document}
+
+% Double-space the manuscript.
+
+% Make the title.
+
+\maketitle
+
+% Place your abstract within the special {sciabstract} environment.
+\hrule
+\begin{sciabstract}
+\begin{center} \large{Abstract}\end{center}
+Developing tools to make neural networks robust and consistent across a wide range of data is of significant interest to data scientists. This comprehensive exam paper presents detailed examples of neural networks which suffer from data inconsistency or fragiility and discusses some possible avenues to recitfying these short-comings. In particular, we first look at a large set of primate brain activity data and highlight how simple classification networks fail to produce consistent results across the entire data set. We then present possible techniques and architectures thoughtfully chosen to improve the generalizability of a network trained using this data. We then shift our focus to the problem of robustness by exploring residual networks subject to adversarial attacks. Drawing from a dynamical systems perspective, many have used the addition of noise to increase the robustness of a trained network. This chosen noise is often small but arbitrary and, in large systems, can increase the complexity of a network significantly. We discuss a potential choice of noise which is informed by the training data set and perhaps simpler to implement. This work is ongoing and future directions are also discussed at the end of the paper.
+\end{sciabstract}
+\hrule
+
+\section{Introduction}Neural networks have become increasingly popular as a tool to discover key patterns and correlates in data. They have been shown to be effective in a variety of classification and regression tasks, however, how these complex sytems work remains opaque. Training these networks often requires large data sets and, once trained, the network itself can be quite fragile. Developing tools to make neural networks robust and consistent across a wide range of data is therefore of significant interest to data scientists. \\
+Some work has been done...
+*references need here*
+
+\section{Neural Networks}
+Linear classifiers (like SVM) and feed forward neural networks.
+\section*{Consistency}
+\section{Experimental data}
+Disucss the experimental set-up
+\section{Learning objectives and obstacles}
+How do we ensure our network is efficient and accurate across multiple days of data where the number of cells recorded from is different? How do we do so without manipulating the data too much? How do we do so while maintaining a reasonably complex model?
+\subsection{Performance on single day}
+\subsection{Inconsistency across days}
+\section{Potential algorithms}
+\subsection{SVM}
+Dependent on kernel choice, fails to achieve accuracy better than single day.
+\subsection{PCA}
+As a classificationt tool and as a preproccessing tool.
+\subsection{Classification network}
+Using PCA, pushing through single day network.
+\subsection{GAN networks}
+Complicated structure, difficult to train...
+\section*{Robustness}
+\section{Residual Networks}
+Learns near-identity mapping, allows for faster training in theory...
+\subsection{ResNet architecture}
+Preprocessing layers and convolutional blocks, followed by more complex ensembles of resnets
+\subsection{Adversarial attacks}
+Discuss briefly the CIFAR10 data set
+Types of adversarial attacks, performance of standard algorithms under attack
+\section{Objectives}
+How do we make these algorithms more robust under attack? Can we do so in a way that does not increase the complexity of the network significantly?
+\section{Dynamical systems and noise}
+From the transport equation to neural network... How added noise changes the decision boundaries
+\section{Performance with added noise}
+Added noise as in UCLA work
+\section{A simpler choice of noise}
+Rationale for a simplified choice of noise that is informed by the data...
+\section{Discussion and Future Work}
+Plan for dissertation research...
+
+%\pagebreak
+%\printbibliography
+
+
+\end{document}
