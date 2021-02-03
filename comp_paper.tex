@@ -43,9 +43,11 @@ Some work has been done...
 *references needed here*
 
 \section{Neural Networks}
-Neural networks are a collection of nodes (neurons) organized in layers and connected to one another through weights. The neurons are so named because they loosely mimic the computations done by the human brain. Each neuron accepts a  The goal of these artificial networks is to ``learn" to approximate a function $f$ which maps a set of input data $x$ to an output $y$.  \\
-Linear classifiers (like SVM) and feed forward neural networks.
-% BE SURE TO TALK ABOUT SEPARABILITY
+Neural networks are a collection of nodes (neurons) organized in layers and connected to one another through weights. The neurons are so named because they loosely mimic the computations done by the human brain. \\
+\textcolor{red}{Structure: input/output, layers, hidden states,weight \& bias.. } \\
+The goal of these artificial networks is to ``learn" to approximate a function $f$ which maps a set of input data $x$ to an output $y$.  \\
+\textcolor{red}{Loss function as a metric, back-prop to learn...}\\
+\textcolor{red}{Brief overview of simple linear classifiers (mention separability), feed-forwark and recurrent NNs}\\
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
@@ -59,51 +61,38 @@ Linear classifiers (like SVM) and feed forward neural networks.
 %\section*{Generalizability}
 \subsection{Experimental data}The primate experiment is conducted by Katalin Gothard in the Gothard Lab at University
 of Arizona \cite{lab}. The experiment is broken up into five time blocks: 3 blocks of machine delivered puffs and 2 blocks of human touch. The experiment alternates between the two different types of blocks starting from a puff block. During the puff block, a machine delivers 11 puffs of air, 10 of which are targeted at various locations on the monkey's face, and one "sham" which blows behind the head. The location of the puffs and timing of the sham are chosen at random. This group of 11 puffs, referred to as a puff trial, is repeated 10 times in each puff block for a total of 33 puffs per block (30 real, 3 sham). Each puff lasts 1 second and there is a 4 second delay between each puff. \\
- In a touch block, a human handler (with whom the monkey has a positive repore) touches the monkeys face in a sweeping gesture 10 times across the left upper muzzle (LUM), and then 10 times accross the left brow (LBR). This grouping of touches, reffered to as a touch trial, is repeated 4 times in each touch block for a total of 80 touches. The duration of the touch is approximately 1 second long, with 4 seconds between each touch.  \\
-Probes are placed in the primate amygdala throughout the duration of the experiment
-to monitor the electrical activity of neurons in the amygdala and 3b. Through a complex inverse problem, the spiking activity is assigned to a particular
+\indent In a touch block, a human handler (with whom the monkey has a positive repore) touches the monkeys face in a sweeping gesture 10 times across the left upper muzzle (LUM), and then 10 times accross the left brow (LBR). This grouping of touches, reffered to as a touch trial, is repeated 4 times in each touch block for a total of 80 touches. The duration of the touch is approximately 1 second long, with 4 seconds between each touch.  \\
+\indent Probes are placed in the primate brain throughout the duration of the experiment
+to monitor the electrical activity of neurons. More specifically, the probe records electric pulses transmitted by the neurons in the brain. These electrical pulses are referred to as spikes and are thought to contain important information about changes in the environment that may impact the body.  Through a complex inverse problem, the electric pulses recorded by the probe are is assigned to a particular
 neuron. The methodology for this inverse problem is beyond the scope of this paper,
 but an interested reader can refer to the associated master's thesis. Once all spike
-times are associated with a particular neuron, we obtain the activity of the primate
-amygdala as a group of spike trains. While presented
-with a stimulus, the heart rate is also monitored, giving us a better understanding of what emotional state the monkey is in. \cite{gothard}. In the experimental data used for this project, a
-total of 58 active neurons were observed.
-Our aim is to understand how information
-about the effective stimuli is embedded within the structure of the spike train data for
-this population of neurons. More generally, we are interested in whether or not existing or new techniques can detect changes in the emotional state of the monkey. In order to benchmark the success of these techniques, we must first establish the ground truth.
-% In order to understand how the brain represents and processes information about
-% eliciting stimuli, we focus our attention on to two specific regions of the brain, 3b and the amygdala. 3b is a portion of the primary somatosensory cortex responsible for decoding sensory inputs related to touch. This region on the brain is well studied and convenient because the neurons in 3b have a very structured receptive field. One can think of a neurons receptive field as the portion of the input space that the neuron will respond to. In other words, it is the group of inputs that drive that neurons spiking activity. The receptive field in 3b is so nicely structured that one can create a map of the face where each region corresponds to a group of neurons in 3b. This is a particularly nice feature as it makes designing experiments and analyzing data much more straightforward. \\
-%   The amygdala is the part of the brain that is responsible for processing our
-% emotions. Almost all information is passed through the amygdala at some point or
-% another. For example, information on motor functions need to be sent to the amygdala
-% so it can anticipate changes in sensory stimulus. This is the reason we do not
-% panic when our field of vision suddenly goes dark during a blink. The amygdala is
-% constantly receiving and decoding information about our surrounding environment in
-% order to inform our emotional responses. As such, it is a natural place to start our
-% observation of spike patterns in order to understand how effective stimulus changes the state of the brain. Furthermore, the amygdala is generally not well understood or even often studied. Unlike 3b, the amygdala does not have a well-structured receptive field.  By working with the data collected at the Gothard lab,  we have a unique opportunity to study spiking data from the amygdala. \\
-% In particular, for this project, we take our observations from the brain of primates. We focus on
-% primate brain because the complexities in the structure of the human brain are
-% most similar to that of primates. Monkeys, like humans, are also highly social creatures.
-% They respond as a human would when they see the face of their young. They
-% are also known to be highly responsive to eye contact and touch.  By tracking the time of individual spikes in 3b and the amygdala, we can
-% obtain a time series of delta spikes called spike trains.
-
+times are associated with a particular neuron, we obtain the brain activity of the primate
+as a series of spike times, referred to as spike trains, for each recorded neuron. While presented
+with a stimulus, the heart rate is also monitored, giving an indication that the monkey is having an emotional reaction to the stimulus through changes in the heart rate. \cite{gothard}. \\
+\indent The two brain regions recorded during these experiments are 3b and the amygdala. 3b is a portion of the primary somatosensory cortex responsible for decoding sensory inputs related to touch. This region on the brain is well studied and convenient because the neurons in 3b have a very structured receptive field. One can think of a neuron's receptive field as the portion of the input space that the neuron will respond to. In other words, it is the group of inputs that drive that neuron's spiking activity. The receptive field in 3b is so nicely structured that one can create a map of the face where each region corresponds to a group of neurons in 3b. This is a particularly nice feature as it makes designing experiments and analyzing data much more straightforward. \\
+\indent The amygdala is the part of the brain that is responsible for processing our
+emotions. Almost all information is passed through the amygdala at some point or
+another. For example, information on motor functions need to be sent to the amygdala
+so it can anticipate changes in sensory stimulus. This is the reason we do not
+panic when our field of vision suddenly goes dark during a blink. The amygdala is
+constantly receiving and decoding information about our surrounding environment from all brain areas in
+order to inform our emotional responses. Because of its complex input, the amygdala is generally not well understood or even often studied. Unlike 3b, the amygdala does not have a well-structured receptive field.  By working with the data collected at the Gothard lab,  we have a unique opportunity to study and learn from spiking activity in the amygdala. \\
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
 % \caption{Visual of experimental set-up}
 % \end{figure}
 \subsection{Objectives and obstacles}
-Machine learning techniques have recently been successful in analyzing/modelling experimental spike trains obtained from more well-studied regions like V1, hippocampus, olfactory systems \cite{laza} \cite{banino} \cite{stevens}. There is reason to believe it may also be useful in understanding how information is encoded or decoded in more complex regions like the amygdala. For example, can we detect, using only the recorded spike train data, when the monkey is in an aroused emotional state? If successful, can we exploit these machine learning algorithms to better understand the computational mechanisms of more complex brain regions like the amygdala?  Using the
-experimental data and a machining learning algorithms, our long term goal is to provide insight
-as to how neurons process information embedded within the spatiotemporal features
-of spike trains.
+Machine learning techniques have recently been successful in analyzing/modelling experimental spike trains obtained from more well-studied regions like V1, hippocampus, olfactory systems \cite{laza} \cite{banino} \cite{stevens}. There is reason to believe it may also be useful in understanding how information is encoded or decoded in more complex regions like the amygdala. For example, using the recorded spike train data as input, can we train a neural network to learn when the monkey is in an aroused emotional state? If successful, can we interpret these networks to inform our understanding of the computational mechanisms at work in complex brain regions like the amygdala?  These questions are best described as the long-term, big picture goal of applying machine learning techniques to this experimental data. We aim to provide insight as to how neurons process information embedded within the spatiotemporal features
+of spike trains. \\
+\indent \textcolor{red}{Can a simple classification network detect the difference between spike activity that is the response to a stimulus versus latent baseline spike activity?}
+\indent Before we can hope to tackle the big picture questions, however, we must first address some more practical concerns with using machine learning on experimental data. This experiment is repeated many times and the data collected represents many different days of experimental work. Between experiments, the probe is left in the primate brain and it is very common for the probe to shift during this time. As such, we can expect that the spiking activity is recorded from a new population of neurons for each day of the experiment. Additionally, due to the senstivity of the patches on the probe, the number of neurons recorded on any given day is also not guarenteed. This creates a significant problem when trying to use the spike data across days as input into the same neural network. Certainly we can expect that the underlying
 \section{Preliminary Results}
 On any given day of experimental data, we have $N$ ordered lists of spike times, where $N$ is the number of individual 3B cells recorded. To prepare the experimental data to be fed through a feed-forward network, we first discretize the time of the experiment into blocks of 5ms. For each time block of 5ms, and for each $N$ we count the number of spikes occuring in that 5ms window. This yields a vector of spike counts of length $N$. We then append 5 of these vectors together, which yields a matrix of length $N\times5$ of spike counts corresponding to a 25ms window in the experiment. We do this for the duration of the experiment, and assign each matrix one of two labels: stimulus or latent. Matrices labelled as stimulus correspond to spiking activity during 25ms of active touch stimulus, while matrices lablled as latent correspond to spiking activity which occured entirely during a period of latency (no stimulus present). These latent times can occur between touches or between experimental blocks. Since these periods of latent were longer and more frequent, there are much more latent data points than there are stimulus data points. To ensure that both labelled classes were represented equally, we randomly sampled from the latent data with replacement until we had an equal number of data points in both classes.
 \subsection{Performance on single day}
 To begin, we first test the performance of a simple neural networks on data from a single day of the primate experiment.\\
 \textcolor{red}{SVM}
-\textcolor{red}{LSTM????}\\
+\textcolor{red}{LSTM}\\
 The amount of experimental data we have is extremely valuable. It is the direct result of many months of careful experimental recordings and hours of meticulous spike sorting. Obtaining more experimental data is expensive and time consuming and therefore not an option
 
 The inevitable variability in experimental data collected across many days highlights  the need to address a more immediate isssue associated with neural networks.
@@ -132,7 +121,7 @@ It is also important to mention that there is little to no biological or real-wo
 % \caption{PCA point cloud shows not good separability linearly}
 % \end{figure}
 \subsection{Simple classification networks}
-By applying PCA to the existing experiemental data, we now have uniform input size across days. This allows us to use our existing working single-day model on multi-day data. Recall the SVM and LSTM networks from Section 3.1. \textcolor{red}{Put results here.}
+By using PCA to transform the existing experiemental data, we now have a uniform input size across days. This allows us to use our existing working single-day model on multi-day data. Recall the SVM and LSTM networks from Section 3.1. \textcolor{red}{Put results here.}
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
@@ -140,7 +129,8 @@ By applying PCA to the existing experiemental data, we now have uniform input si
 % \end{figure}
 \subsection{GAN networks}
 An alternative way to make the input shape uniform across days comes from an idea inspired by Generative Adversarial Networks (GANs). A GAN consists of two competeing sub-networks, a Generator and a Discriminator, and is best understood by a more colloquial analogy. Consider the problem of a banker and a criminal trying to create a counterfeit dollar bill. In this analogy, the buyer plays the role of the Discriminator network and the criminal plays the role of the Generator network. The criminal will first generate some counterfeit money and try to deposit the it at the local bank. The banker will examine the bill counterfeit against real bills, point out the discrepancies, and send the criminal home. The criminal, now equipped with the knowledge of what went wrong, tries to improve his counterfeit bill and try again. This will continue until the criminal makes a counterfeit bill so good that the discriminator cannot tell the different between the fake and a real bill. \\
-The key concept in GANs is that the competing networks work to learn the key features of the input data. The discriminators error back propogates through the network and informs the generator, which learns
+The key concept in GANs is that the competing networks work together to learn the key features of the input data. Error from the discrimintors loss is back-propogated through the network and used to update the weights of the generator. By competing against the discrimintor, the generator learns how to map a sample from one distribution space (often a random distribution) to something that mimics, quite accurately, a sample from the desired distribution space. We propose a modified GAN framework to rectify the dimensional variability in our experimental data. \\
+\indent Our modified GAN framework will be made up of three types of networks: an encoder, a decoder, and a discriminator. It will often be useful to consider a specific encoder and decoder together as one pair. We refer to this pairing as an autoencoder. In this framework, the autoencoder plays the role of the generator. Suppose we train an autoencoder for each day of experimental data. The encoder will accept as input...
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
@@ -155,9 +145,9 @@ Residual networks were first introduced in 2015 to address the issue of explodin
 \indent In the residual learning framework, we assume that mapping between input and output is near-identity. In the case where the identity mapping is optimal, the network can drive the weights towards zero to approximate an identity mapping. In practical cases,the identity mappings will likely not be the optimal mapping, but nevertheless the residual learning framework has been shown to precondition the learning problem better, with learned residual functions having much smaller responses in general \cite{res}. Ensembles of residual networks, which consist of a group of residual networks trained simultatneously, have been shown to be extremely accurate on practical image recognition tasks.
 \subsection{Adversarial attacks}
 Although the residual learning framework made training DNNs pragmatic, these deep networks remain vulnerable to adversarial attacks and there is a reluctance to apply DNNs to practical applications where security and/or safety is crucial. This includes but is not limited to automonomous vehicles, robotics, malware detection etc.. (refs needed).
-Types of adversarial attacks, performance of standard algorithms under attack
+\textcolor{red}{Types of adversarial attacks, performance of standard algorithms under attack.}
 \subsection{Objectives}
-How do we make these algorithms more robust under attack? Can we do so in a way that does not increase the complexity of the network significantly?
+\textcolor{red}{How do we make these algorithms more robust under attack? Can we do so in a way that does not increase the complexity of the network significantly?}
 \section{A proposed model}
 \subsection{ResNet architecture and Neural ODEs}
 Preprocessing layers and convolutional blocks, followed by more complex ensembles of resnets
