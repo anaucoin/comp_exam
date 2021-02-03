@@ -40,42 +40,143 @@ Developing tools to make neural networks robust and consistent across a wide ran
 
 \section{Introduction}Neural networks have become increasingly popular as a tool to discover key patterns and correlates in data. They have been shown to be effective in a variety of classification and regression tasks, however, how these complex sytems work remains opaque. Training these networks often requires large data sets and, once trained, the network itself can be quite fragile. Developing tools to make neural networks robust and consistent across a wide range of data is therefore of significant interest to data scientists. \\
 Some work has been done...
-*references need here*
+*references needed here*
 
 \section{Neural Networks}
+Neural networks are a collection of nodes (neurons) organized in layers and connected to one another through weights. The neurons are so named because they loosely mimic the computations done by the human brain. Each neuron accepts a  The goal of these artificial networks is to ``learn" to approximate a function $f$ which maps a set of input data $x$ to an output $y$.  \\
 Linear classifiers (like SVM) and feed forward neural networks.
-\section*{Consistency}
-\section{Experimental data}
-Disucss the experimental set-up
-\section{Learning objectives and obstacles}
-How do we ensure our network is efficient and accurate across multiple days of data where the number of cells recorded from is different? How do we do so without manipulating the data too much? How do we do so while maintaining a reasonably complex model?
+% BE SURE TO TALK ABOUT SEPARABILITY
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{Classic SVM visual(?).}
+% \end{figure}
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{Example of a standard feed-forward network architecture.}
+% \end{figure}
+%\section*{Generalizability}
+\subsection{Experimental data}The primate experiment is conducted by Katalin Gothard in the Gothard Lab at University
+of Arizona \cite{lab}. The experiment is broken up into five time blocks: 3 blocks of machine delivered puffs and 2 blocks of human touch. The experiment alternates between the two different types of blocks starting from a puff block. During the puff block, a machine delivers 11 puffs of air, 10 of which are targeted at various locations on the monkey's face, and one "sham" which blows behind the head. The location of the puffs and timing of the sham are chosen at random. This group of 11 puffs, referred to as a puff trial, is repeated 10 times in each puff block for a total of 33 puffs per block (30 real, 3 sham). Each puff lasts 1 second and there is a 4 second delay between each puff. \\
+ In a touch block, a human handler (with whom the monkey has a positive repore) touches the monkeys face in a sweeping gesture 10 times across the left upper muzzle (LUM), and then 10 times accross the left brow (LBR). This grouping of touches, reffered to as a touch trial, is repeated 4 times in each touch block for a total of 80 touches. The duration of the touch is approximately 1 second long, with 4 seconds between each touch.  \\
+Probes are placed in the primate amygdala throughout the duration of the experiment
+to monitor the electrical activity of neurons in the amygdala and 3b. Through a complex inverse problem, the spiking activity is assigned to a particular
+neuron. The methodology for this inverse problem is beyond the scope of this paper,
+but an interested reader can refer to the associated master's thesis. Once all spike
+times are associated with a particular neuron, we obtain the activity of the primate
+amygdala as a group of spike trains. While presented
+with a stimulus, the heart rate is also monitored, giving us a better understanding of what emotional state the monkey is in. \cite{gothard}. In the experimental data used for this project, a
+total of 58 active neurons were observed.
+Our aim is to understand how information
+about the effective stimuli is embedded within the structure of the spike train data for
+this population of neurons. More generally, we are interested in whether or not existing or new techniques can detect changes in the emotional state of the monkey. In order to benchmark the success of these techniques, we must first establish the ground truth.
+% In order to understand how the brain represents and processes information about
+% eliciting stimuli, we focus our attention on to two specific regions of the brain, 3b and the amygdala. 3b is a portion of the primary somatosensory cortex responsible for decoding sensory inputs related to touch. This region on the brain is well studied and convenient because the neurons in 3b have a very structured receptive field. One can think of a neurons receptive field as the portion of the input space that the neuron will respond to. In other words, it is the group of inputs that drive that neurons spiking activity. The receptive field in 3b is so nicely structured that one can create a map of the face where each region corresponds to a group of neurons in 3b. This is a particularly nice feature as it makes designing experiments and analyzing data much more straightforward. \\
+%   The amygdala is the part of the brain that is responsible for processing our
+% emotions. Almost all information is passed through the amygdala at some point or
+% another. For example, information on motor functions need to be sent to the amygdala
+% so it can anticipate changes in sensory stimulus. This is the reason we do not
+% panic when our field of vision suddenly goes dark during a blink. The amygdala is
+% constantly receiving and decoding information about our surrounding environment in
+% order to inform our emotional responses. As such, it is a natural place to start our
+% observation of spike patterns in order to understand how effective stimulus changes the state of the brain. Furthermore, the amygdala is generally not well understood or even often studied. Unlike 3b, the amygdala does not have a well-structured receptive field.  By working with the data collected at the Gothard lab,  we have a unique opportunity to study spiking data from the amygdala. \\
+% In particular, for this project, we take our observations from the brain of primates. We focus on
+% primate brain because the complexities in the structure of the human brain are
+% most similar to that of primates. Monkeys, like humans, are also highly social creatures.
+% They respond as a human would when they see the face of their young. They
+% are also known to be highly responsive to eye contact and touch.  By tracking the time of individual spikes in 3b and the amygdala, we can
+% obtain a time series of delta spikes called spike trains.
+
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{Visual of experimental set-up}
+% \end{figure}
+\subsection{Objectives and obstacles}
+Machine learning techniques have recently been successful in analyzing/modelling experimental spike trains obtained from more well-studied regions like V1, hippocampus, olfactory systems \cite{laza} \cite{banino} \cite{stevens}. There is reason to believe it may also be useful in understanding how information is encoded or decoded in more complex regions like the amygdala. For example, can we detect, using only the recorded spike train data, when the monkey is in an aroused emotional state? If successful, can we exploit these machine learning algorithms to better understand the computational mechanisms of more complex brain regions like the amygdala?  Using the
+experimental data and a machining learning algorithms, our long term goal is to provide insight
+as to how neurons process information embedded within the spatiotemporal features
+of spike trains.
+\section{Preliminary Results}
+On any given day of experimental data, we have $N$ ordered lists of spike times, where $N$ is the number of individual 3B cells recorded. To prepare the experimental data to be fed through a feed-forward network, we first discretize the time of the experiment into blocks of 5ms. For each time block of 5ms, and for each $N$ we count the number of spikes occuring in that 5ms window. This yields a vector of spike counts of length $N$. We then append 5 of these vectors together, which yields a matrix of length $N\times5$ of spike counts corresponding to a 25ms window in the experiment. We do this for the duration of the experiment, and assign each matrix one of two labels: stimulus or latent. Matrices labelled as stimulus correspond to spiking activity during 25ms of active touch stimulus, while matrices lablled as latent correspond to spiking activity which occured entirely during a period of latency (no stimulus present). These latent times can occur between touches or between experimental blocks. Since these periods of latent were longer and more frequent, there are much more latent data points than there are stimulus data points. To ensure that both labelled classes were represented equally, we randomly sampled from the latent data with replacement until we had an equal number of data points in both classes.
 \subsection{Performance on single day}
-\subsection{Inconsistency across days}
-\section{Potential algorithms}
-\subsection{SVM}
-Dependent on kernel choice, fails to achieve accuracy better than single day.
+To begin, we first test the performance of a simple neural networks on data from a single day of the primate experiment.\\
+\textcolor{red}{SVM}
+\textcolor{red}{LSTM????}\\
+The amount of experimental data we have is extremely valuable. It is the direct result of many months of careful experimental recordings and hours of meticulous spike sorting. Obtaining more experimental data is expensive and time consuming and therefore not an option
+
+The inevitable variability in experimental data collected across many days highlights  the need to address a more immediate isssue associated with neural networks.
+How do we ensure our network is efficient and accurate across multiple days of data where the number of cells recorded from is different? How do we do so without manipulating the data too much? How do we do so while maintaining a reasonably complex model?
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{SVM single day.}
+% \end{figure}
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{Training and validation accuracy graphs. W/ and w/o boot strapping(?)}
+% \end{figure}
+\section{Methods and potential algorithms}
+In this section, we discuss the possible methods and algorithms we might use to overcome the issue of generalizability.
 \subsection{PCA}
-As a classificationt tool and as a preproccessing tool.
-\subsection{Classification network}
-Using PCA, pushing through single day network.
+One possible way ensure our algorithm is accruate across days is to be able to train one model on all days. This is impossible with the data we currently have since the shape of the input space changes across days. One way to rectify this is to project each days data onto a subspace of prescribed size $k$. In our experimental case, this can be thought of as picking a $k$ dimensional subset of the $N$ recorded neurons. This can consist of choosing $k$ indivual neruons or $k$ linear combinations of neurons. Applying this dimensional reduction for each day results in a uniform size of input data across days. Of course, there is always a trade-off between dimensional simplicity and accuracy. In projecting onto this lower dimensional subspace, we are losing potentially important information. Principal component analysis or PCA is a natural way to project data onto a lower dimensional subspace while also preserving the features of the data with the most variability. This is particularly desirable in applications to machine learning where variability is seen as containing crucial information. PCA can potential transform non-separable data into separable data. As we have seen, the separability in data points allows for greater success in classification tasks.\\
+%check this
+We start by computing the PCA for each of the twelve days' data. To compute PCA for a given day, we must first standardize the statistics for each neuron. This is necessary since PCA is particularly sensitive to variance across input features. In this case, the input features are the spike counts for a particular neuron in a single time bin. Thus, there is a total of $5N$ input features.  For ease of computation, we  flatten each $N\times5$ input matrix to be a single vector of length $5N$.  We then compute the standardized data $\tilde{x}$ by
+$$ \tilde{x_i} = x_i - \mu_i / \sigma_i $$
+where $\mu_i$ and $\sigma_i$ are the mean and standard deviation for the $i$-th input feature respectively. Once standardized, we compute the covariance matrix for $\tilde{x}$ and its eigenvector and eigenvalues. The eigenvectors of the convariance matrix are the principal components, the direction along which the data has the most variability. Their associated eigenvalues can be thought of as a coefficient which quanitfies the amount of variability in that direction. By dropping the last $N-k$ principal components and projecting the data along the remaining subspace, we can transform the data across days while losing the least amount of variability. This allows us to have a uniform input size across days. \\
+Below is a visualization of the PCA computed for all twelve days. Using the PCA is a simple and quick way to work around the issue of input space variability but it leaves something to be desired. We see that across days the PCA is qualitatively similar. There is no significant decrease in the magnitude of the eigenvectors making the choice of the lower dimension $k$ unclear. Additionally, the point clouds for the first few components (where the data has the most significant variability), are very non-separable. This is of significant importance when we choose a classification network architecture since it is likely that a simple feed-forward network of linear layers will not have much success. \\
+It is also important to mention that there is little to no biological or real-world meaning that can be interpreted by the principal components. Using PCA largely means giving up the hope for a tractable and practical understanding of any classification results obtained from this data. If the long term goal is to use machine learning to inform our hypthosis about the computational mechanisms in the brain, PCA is not necessarily the top choice. Nevertheless, it is quick and simple to implement and classification algorithms using the PCA data are still worth exploring.
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{PCA point cloud shows not good separability linearly}
+% \end{figure}
+\subsection{Simple classification networks}
+By applying PCA to the existing experiemental data, we now have uniform input size across days. This allows us to use our existing working single-day model on multi-day data. Recall the SVM and LSTM networks from Section 3.1. \textcolor{red}{Put results here.}
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{Results of multiday data through network similar to single day network (need to compute this)}
+% \end{figure}
 \subsection{GAN networks}
-Complicated structure, difficult to train...
+An alternative way to make the input shape uniform across days comes from an idea inspired by Generative Adversarial Networks (GANs). A GAN consists of two competeing sub-networks, a Generator and a Discriminator, and is best understood by a more colloquial analogy. Consider the problem of a banker and a criminal trying to create a counterfeit dollar bill. In this analogy, the buyer plays the role of the Discriminator network and the criminal plays the role of the Generator network. The criminal will first generate some counterfeit money and try to deposit the it at the local bank. The banker will examine the bill counterfeit against real bills, point out the discrepancies, and send the criminal home. The criminal, now equipped with the knowledge of what went wrong, tries to improve his counterfeit bill and try again. This will continue until the criminal makes a counterfeit bill so good that the discriminator cannot tell the different between the fake and a real bill. \\
+The key concept in GANs is that the competing networks work to learn the key features of the input data. The discriminators error back propogates through the network and informs the generator, which learns
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{GAN architecture visual}
+% \end{figure}
+It is likely clear to the reader that this model architecture is significantly more complex and a natural question one might as is the following: how easy would the network
+\textcolor{red}{TABLE of GAN results and discussion of pitfalls.}
 \section*{Robustness}
 \section{Residual Networks}
-Learns near-identity mapping, allows for faster training in theory...
-\subsection{ResNet architecture}
-Preprocessing layers and convolutional blocks, followed by more complex ensembles of resnets
+Residual networks were first introduced in 2015 to address the issue of exploding/vanishing gradients and have sinced made training ultra-deep networks (networks over 1000 layers) pragmatic. In previous discussion, we considered a mapping, $y = f(x,\theta)$ from input data $x$ to target $y$ with parameters $\theta$, to be learned by a feed-forward network. Assuming that the input and output have the same dimension, we can ask that the network instead learn the residual mapping $r(x) = f(x)-x$. Thus, the true mapping will be $F(x) = r(x) + x$. While the network should be able to approximate both functions asymptotically in theory, the residual network formulation allows for a better conditioned learning task. \\
+\indent The problem of exploding/vanishing gradients is called the degradation problem. As more layers are added to neural networks, the network will begin to converge, then become saturated, and then abrubtly loses accuracy with the addition of more layers. This degradation of accuracy suggests that, in the presence of many nonlinear layers, the network may have difficulty in approximating near identity mappings. \\
+\indent In the residual learning framework, we assume that mapping between input and output is near-identity. In the case where the identity mapping is optimal, the network can drive the weights towards zero to approximate an identity mapping. In practical cases,the identity mappings will likely not be the optimal mapping, but nevertheless the residual learning framework has been shown to precondition the learning problem better, with learned residual functions having much smaller responses in general \cite{res}. Ensembles of residual networks, which consist of a group of residual networks trained simultatneously, have been shown to be extremely accurate on practical image recognition tasks.
 \subsection{Adversarial attacks}
-Discuss briefly the CIFAR10 data set
+Although the residual learning framework made training DNNs pragmatic, these deep networks remain vulnerable to adversarial attacks and there is a reluctance to apply DNNs to practical applications where security and/or safety is crucial. This includes but is not limited to automonomous vehicles, robotics, malware detection etc.. (refs needed).
 Types of adversarial attacks, performance of standard algorithms under attack
-\section{Objectives}
+\subsection{Objectives}
 How do we make these algorithms more robust under attack? Can we do so in a way that does not increase the complexity of the network significantly?
-\section{Dynamical systems and noise}
-From the transport equation to neural network... How added noise changes the decision boundaries
-\section{Performance with added noise}
-Added noise as in UCLA work
-\section{A simpler choice of noise}
-Rationale for a simplified choice of noise that is informed by the data...
+\section{A proposed model}
+\subsection{ResNet architecture and Neural ODEs}
+Preprocessing layers and convolutional blocks, followed by more complex ensembles of resnets
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{ResNet architecture visual}
+% \end{figure}
+\subsection{Dynamical systems and noise}
+From the transport equation to neural network... How added noise changes the decision boundaries \\
+% \begin{figure}[h!]
+% \center
+% \includegraphics[width=5cm]{example-image-a}
+% \caption{Changes to boundaries as noise is increased for tranpsort eq. (myself or can I pull this from UCLA paper??)}
+% \end{figure}
+Performance with added noise.
+\section{How much noise?}
+Rationale for a simplified choice of noise that is informed by the data...\\
+NEED TO DISCUSS THIS(?)
 \section{Discussion and Future Work}
 Plan for dissertation research...
 
