@@ -163,14 +163,24 @@ where superscript BN are batch normalization layers, supercript C are convolutio
 \end{cases}
 \end{equation*}
 In a supervised learning task, each element $x \in T$ will have an associated label $y$. We can represent the full ResNet as
-$$ \begin{cases}
-x+{l+1} = x_l + F(x_l,\theta_l), & l=0,\dots,L-1 \\
+
+\begin{equation} \begin{cases}
+x_{l+1} = x_l + F(x_l,\theta_l), & l=0,\dots,L-1 \\
 x_0 = x \\
 \hat y = f(x_L)
-\end{cases} $$
+\end{cases} \end{equation}
 
 where L is the number of residual blocks, $f(x) = \text{softmax}(\theta \cdot x)$ and $\hat y$ is the network's prediction of true target label $y$ for the initial input $x$. \\
-\indent It is helpful to view the training of the ResNet as a an ODE. To do so, we will introduce a temporal discretization where "time" refers to the layer depth.
+\indent It is helpful to view the training of the ResNet as a an ODE. To do so, we will introduce a temporal discretization where ``time" refers to the layer depth. Let $\Delta t_l = l/L$ for $l=0,1,\dots,L$ and $x_l = x(t_l)$, then Eq. 1 becomes
+\begin{equation} \begin{cases}
+x(t_{l+1}) = x(t_l) + F(x(t_l),\theta(t_l)), & l=0,\dots,L-1 \\
+x(0) = x \\
+\hat y = f(x(1)).
+\end{cases} \end{equation}
+Multiplying the $F(x(t_l),\theta(t_l)$ term by $\Delta t/\Delta t$ and defining $\tilde{F} = \frac{1}{\Delta t} F$ we obtain the forward Euler discretization
+\begin{equation}
+  \dfrac{dx(t)}{dt} = \tilde{F}(x(t),w(t)),  x(0) = x.
+\end{equation}
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
