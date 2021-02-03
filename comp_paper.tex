@@ -7,6 +7,8 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{csquotes}
+\usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{multimedia}
 \usepackage{graphicx}
 \usepackage{media9}
@@ -85,13 +87,13 @@ order to inform our emotional responses. Because of its complex input, the amygd
 \subsection{Objectives and obstacles}
 Machine learning techniques have recently been successful in analyzing/modelling experimental spike trains obtained from more well-studied regions like V1, hippocampus, olfactory systems \cite{laza} \cite{banino} \cite{stevens}. There is reason to believe it may also be useful in understanding how information is encoded or decoded in more complex regions like the amygdala. For example, using the recorded spike train data as input, can we train a neural network to learn when the monkey is in an aroused emotional state? If successful, can we interpret these networks to inform our understanding of the computational mechanisms at work in complex brain regions like the amygdala?  These questions are best described as the long-term, big picture goal of applying machine learning techniques to this experimental data. We aim to provide insight as to how neurons process information embedded within the spatiotemporal features
 of spike trains. \\
-\indent \textcolor{red}{Can a simple classification network detect the difference between spike activity that is the response to a stimulus versus latent baseline spike activity?}
+\indent \textcolor{red}{Can a simple classification network detect the difference between spike activity that is the response to a stimulus versus latent baseline spike activity?} \\
 \indent Before we can hope to tackle the big picture questions, however, we must first address some more practical concerns with using machine learning on experimental data. This experiment is repeated many times and the data collected represents many different days of experimental work. Between experiments, the probe is left in the primate brain and it is very common for the probe to shift during this time. As such, we can expect that the spiking activity is recorded from a new population of neurons for each day of the experiment. Additionally, due to the senstivity of the patches on the probe, the number of neurons recorded on any given day is also not guarenteed. This creates a significant problem when trying to use the spike data across days as input into the same neural network. Certainly we can expect that the underlying
 \section{Preliminary Results}
 On any given day of experimental data, we have $N$ ordered lists of spike times, where $N$ is the number of individual 3B cells recorded. To prepare the experimental data to be fed through a feed-forward network, we first discretize the time of the experiment into blocks of 5ms. For each time block of 5ms, and for each $N$ we count the number of spikes occuring in that 5ms window. This yields a vector of spike counts of length $N$. We then append 5 of these vectors together, which yields a matrix of length $N\times5$ of spike counts corresponding to a 25ms window in the experiment. We do this for the duration of the experiment, and assign each matrix one of two labels: stimulus or latent. Matrices labelled as stimulus correspond to spiking activity during 25ms of active touch stimulus, while matrices lablled as latent correspond to spiking activity which occured entirely during a period of latency (no stimulus present). These latent times can occur between touches or between experimental blocks. Since these periods of latent were longer and more frequent, there are much more latent data points than there are stimulus data points. To ensure that both labelled classes were represented equally, we randomly sampled from the latent data with replacement until we had an equal number of data points in both classes.
 \subsection{Performance on single day}
 To begin, we first test the performance of a simple neural networks on data from a single day of the primate experiment.\\
-\textcolor{red}{SVM}
+\textcolor{red}{SVM}\\
 \textcolor{red}{LSTM}\\
 The amount of experimental data we have is extremely valuable. It is the direct result of many months of careful experimental recordings and hours of meticulous spike sorting. Obtaining more experimental data is expensive and time consuming and therefore not an option
 
@@ -136,11 +138,11 @@ The key concept in GANs is that the competing networks work together to learn th
 % \includegraphics[width=5cm]{example-image-a}
 % \caption{GAN architecture visual}
 % \end{figure}
-It is likely clear to the reader that this model architecture is significantly more complex and a natural question one might as is the following: how easy would the network
+It is likely clear to the reader that this model architecture is significantly more complex and a natural concern one might have is how practical it is to train a network of this type and size. It turns out...
 \textcolor{red}{TABLE of GAN results and discussion of pitfalls.}
 \section*{Robustness}
 \section{Residual Networks}
-Residual networks were first introduced in 2015 to address the issue of exploding/vanishing gradients and have sinced made training ultra-deep networks (networks over 1000 layers) pragmatic. In previous discussion, we considered a mapping, $y = f(x,\theta)$ from input data $x$ to target $y$ with parameters $\theta$, to be learned by a feed-forward network. Assuming that the input and output have the same dimension, we can ask that the network instead learn the residual mapping $r(x) = f(x)-x$. Thus, the true mapping will be $F(x) = r(x) + x$. While the network should be able to approximate both functions asymptotically in theory, the residual network formulation allows for a better conditioned learning task. \\
+Residual networks (ResNets) were first introduced in 2015 to address the issue of exploding/vanishing gradients and have sinced made training ultra-deep networks (networks over 1000 layers) pragmatic. In previous discussion, we considered a mapping, $y = f(x,\theta)$ from input data $x$ to target $y$ with parameters $\theta$, to be learned by a feed-forward network. Assuming that the input and output have the same dimension, we can ask that the network instead learn the residual mapping $r(x) = f(x)-x$. Thus, the true mapping will be $F(x) = r(x) + x$. While the network should be able to approximate both functions asymptotically in theory, the residual network formulation allows for a better conditioned learning task. \\
 \indent The problem of exploding/vanishing gradients is called the degradation problem. As more layers are added to neural networks, the network will begin to converge, then become saturated, and then abrubtly loses accuracy with the addition of more layers. This degradation of accuracy suggests that, in the presence of many nonlinear layers, the network may have difficulty in approximating near identity mappings. \\
 \indent In the residual learning framework, we assume that mapping between input and output is near-identity. In the case where the identity mapping is optimal, the network can drive the weights towards zero to approximate an identity mapping. In practical cases,the identity mappings will likely not be the optimal mapping, but nevertheless the residual learning framework has been shown to precondition the learning problem better, with learned residual functions having much smaller responses in general \cite{res}. Ensembles of residual networks, which consist of a group of residual networks trained simultatneously, have been shown to be extremely accurate on practical image recognition tasks.
 \subsection{Adversarial attacks}
@@ -149,22 +151,41 @@ Although the residual learning framework made training DNNs pragmatic, these dee
 \subsection{Objectives}
 \textcolor{red}{How do we make these algorithms more robust under attack? Can we do so in a way that does not increase the complexity of the network significantly?}
 \section{A proposed model}
-\subsection{ResNet architecture and Neural ODEs}
-Preprocessing layers and convolutional blocks, followed by more complex ensembles of resnets
+\subsection{ResNets as neural ODEs}
+We consider a residual network that is made up of a series of pre-activated residual blocks. Each block can be thought of as a layer that computes a residual mapping. The $l$-th residual block take in input $x_l$ and computes the mapping
+$$ x_{l+1} = x_{l} + F(x_l,\theta_l)$$
+where $x_0$ is a sample from the training set $T \subset \mathbb{R}^d $ and the parameters $\theta_l$ are learned through back-propogation of the loss function. Here $F(x_l,\theta_l)$ is a pre-activation residual block and can be written as
+$$ F(x_l,\theta_l) =  \theta_l^{C2}\otimes\sigma(\theta_l^{BN2}\odot\theta_l^{C1}\otimes\sigma(\theta_l^{BN1}\odot x_l))$$
+where superscript BN are batch normalization layers, supercript C are convolutional layers and $\odot, \otimes$ represent that batch normalization and convolution operators respectively. The activation function $\sigma$ is an application of the rectified linear unit (ReLU). ReLU is the linear piecewise function
+\begin{equation*}
+\sigma(x) = \begin{cases} x & x > 0 \\
+ 0 & x \leq 0. \\
+\end{cases}
+\end{equation*}
+In a supervised learning task, each element $x \in T$ will have an associated label $y$. We can represent the full ResNet as
+$$ \begin{cases}
+x+{l+1} = x_l + F(x_l,\theta_l), & l=0,\dots,L-1 \\
+x_0 = x \\
+\hat y = f(x_L)
+\end{cases} $$
+
+where L is the number of residual blocks, $f(x) = \text{softmax}(\theta \cdot x)$ and $\hat y$ is the network's prediction of true target label $y$ for the initial input $x$. \\
+\indent It is helpful to view the training of the ResNet as a an ODE. To do so, we will introduce a temporal discretization where "time" refers to the layer depth.
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
 % \caption{ResNet architecture visual}
 % \end{figure}
-\subsection{Dynamical systems and noise}
-From the transport equation to neural network... How added noise changes the decision boundaries \\
+% \subsection{Dynamical systems and noise}
+% From the transport equation to neural network... How added noise changes the decision boundaries \\
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
 % \caption{Changes to boundaries as noise is increased for tranpsort eq. (myself or can I pull this from UCLA paper??)}
 % \end{figure}
+\subsection{ResNet with added noise}
 Performance with added noise.
-\section{How much noise?}
+\subsection{How much noise?}
 Rationale for a simplified choice of noise that is informed by the data...\\
 NEED TO DISCUSS THIS(?)
 \section{Discussion and Future Work}
