@@ -217,9 +217,9 @@ Residual networks (ResNets) were first introduced in 2015 to address the issue o
 \indent The problem of exploding/vanishing gradients is called the degradation problem. As more layers are added to neural networks, the network will begin to converge, then become saturated, and then abrubtly loses accuracy with the addition of more layers. This degradation of accuracy suggests that, in the presence of many nonlinear layers, the network may have difficulty in approximating near identity mappings. \\
 \indent In the residual learning framework, we assume that mapping between input and output is near-identity. In the case where the identity mapping is optimal, the network can drive the weights towards zero to approximate an identity mapping. In practical cases,the identity mappings will likely not be the optimal mapping, but nevertheless the residual learning framework has been shown to precondition the learning problem better, with learned residual functions having much smaller responses in general \cite{res}. Ensembles of residual networks, which consist of a group of residual networks trained simultatneously, have been shown to be extremely accurate on practical image recognition tasks.
 \subsection{Adversarial attacks}
-Although the residual learning framework made training DNNs pragmatic, these deep networks remain vulnerable to adversarial attacks and there is a reluctance to apply DNNs to practical applications where security and/or safety is crucial. This includes but is not limited to automonomous vehicles, robotics, malware detection etc.. \textcolor{red}{REFERENCES}
-\subsection{Objectives}
-\section{A proposed model}
+Although the residual learning framework made training DNNs pragmatic, these deep networks remain vulnerable to adversarial attacks and there is a reluctance to apply DNNs to practical applications where security and/or safety is crucial. This includes but is not limited to automonomous vehicles, robotics, malware detection etc.. \textcolor{red}{REFERENCES} \\
+\textcolor{red}{Pertubations to input ditribution versus perturbations to model parameters} \\
+\textcolor{red}{Search for a means to make these networks more robust under attack. We turn to a dynamical systems framework.}
 \subsection{ResNets as neural ODEs}
 We consider a residual network that is made up of a series of pre-activated residual blocks. Each block can be thought of as a layer that computes a residual mapping. The $l$-th residual block take in input $x_l$ and computes the mapping
 $$ x_{l+1} = x_{l} + F(x_l,\theta_l)$$
@@ -252,6 +252,11 @@ Multiplying the $F(x(t_l),\theta(t_l)$ term by $\Delta t/\Delta t$ and defining 
 \begin{equation}
   \dfrac{dx(t)}{dt} = \tilde{F}(x(t),w(t)),\text{   }  x(0) = x.
 \end{equation}
+
+\textcolor{red}{How noise regularizes the decision boundary of network (transport eq?)}
+\subsection{ResNet with added noise}
+\textcolor{red}{Successful improvements to training with the addition of added noise}
+\textcolor{red}{Gaussian noise is added at each residual block. Is this complexity necessary? Can we achieve similar or better accuracy with simpler additive noise informed by the training data? }
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
@@ -264,11 +269,8 @@ Multiplying the $F(x(t_l),\theta(t_l)$ term by $\Delta t/\Delta t$ and defining 
 % \includegraphics[width=5cm]{example-image-a}
 % \caption{Changes to boundaries as noise is increased for tranpsort eq. (myself or can I pull this from UCLA paper??)}
 % \end{figure}
-\subsection{ResNet with added noise}
-Performance with added noise.
-\subsection{How much noise?}
-Rationale for a simplified choice of noise that is informed by the data...\\
-NEED TO DISCUSS THIS(?)
+\subsection{An alternative choice for added noise}
+\textcolor{red}{Stochastic resonance (?)}
 \section{Discussion and Future Work}
 Plan for dissertation research...
 
