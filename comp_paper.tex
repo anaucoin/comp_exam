@@ -201,8 +201,8 @@ By using PCA to transform the existing experiemental data, we can create a train
     \item Pass a batch of new day's data to the discriminator.
     \item Average the loss from Steps 1 \& 2.
     \item Backpropagate through the discriminator only.
+    \item Repeat Generator and Discriminator steps for each additional day of data.
   \end{enumerate}
-  \textbf{Repeat Generator and Discriminator steps for each additional day of data.}
 % \begin{figure}[h!]
 % \center
 % \includegraphics[width=5cm]{example-image-a}
@@ -214,12 +214,24 @@ The concern with using this approach is mainly due to the fact that it is fairly
 \section*{Robustness}
 \section{Residual Networks}
 Residual networks (ResNets) were first introduced in 2015 to address the issue of exploding/vanishing gradients and have sinced made training ultra-deep networks (networks over 1000 layers) pragmatic. In previous discussion, we considered a mapping, $y = f(x,\theta)$ from input data $x$ to target $y$ with parameters $\theta$, to be learned by a feed-forward network. Assuming that the input and output have the same dimension, we can ask that the network instead learn the residual mapping $r(x) = f(x)-x$. Thus, the true mapping will be $F(x) = r(x) + x$. While the network should be able to approximate both functions asymptotically in theory, the residual network formulation allows for a better conditioned learning task. \\
-\indent The problem of exploding/vanishing gradients is called the degradation problem. As more layers are added to neural networks, the network will begin to converge, then become saturated, and then abrubtly loses accuracy with the addition of more layers. This degradation of accuracy suggests that, in the presence of many nonlinear layers, the network may have difficulty in approximating near identity mappings. \\
+\indent The problem of exploding/vanishing gradients is called the degradation problem. As more layers are added to neural networks, the network will begin to converge, then become saturated, and then abrubtly lose accuracy with the addition of more layers. This degradation of accuracy suggests that, in the presence of many nonlinear layers, the network may have difficulty in approximating near identity mappings. \\
 \indent In the residual learning framework, we assume that mapping between input and output is near-identity. In the case where the identity mapping is optimal, the network can drive the weights towards zero to approximate an identity mapping. In practical cases,the identity mappings will likely not be the optimal mapping, but nevertheless the residual learning framework has been shown to precondition the learning problem better, with learned residual functions having much smaller responses in general \cite{res}. Ensembles of residual networks, which consist of a group of residual networks trained simultatneously, have been shown to be extremely accurate on practical image recognition tasks.
 \subsection{Adversarial attacks}
 Although the residual learning framework made training DNNs pragmatic, these deep networks remain vulnerable to adversarial attacks and there is a reluctance to apply DNNs to practical applications where security and/or safety is crucial. This includes but is not limited to automonomous vehicles, robotics, malware detection etc.. \textcolor{red}{REFERENCES} \\
-\textcolor{red}{Pertubations to input ditribution versus perturbations to model parameters} \\
-\textcolor{red}{Search for a means to make these networks more robust under attack. We turn to a dynamical systems framework.}
+Adversarial attacks can fall into two distinct categories: white-box attacks and blind attacks. In white-box attacks, the attacker has acces to all of the information about a network. This includes access to the models architecture, weights, loss function, and gradients with respect to input. Many of the white-box adversarial attacks perturb specific inputs to the model while some attacks also include perturbing the model parameters. Blind attacks are more challenging to implement as the attacker has very limited access to information about the model. Blind attacks often solely focus on perturbing input data into the model to force a degradation in the model's performance. \\
+For this paper, we consider white-box type adversarial attacks on an ensemble of residual networks. The task of this ensemble is to correctly classify images from the CIFAR10 data set. The two adversarial attacks we consider, Fast Gradient Sign Method (FGSM) and its iterative counterpart (IFGSM). Both methods exploit the loss function to create new adversarial images. The adversarial images $x_{adv}$ are created by perturbing a true input images $x$ in the direction that maximizes the loss function $L$ with respect to the aversarial image $x_{adv}$. Mathematically, this is calculated by solving the following optimization problem
+\begin{equation}
+  \begin{cases} \max\limits_{x_{adv}} L(F(x_{adv}, \theta),y) \\
+   || x_{adv} - x ||_{\infty} < \epsilon.
+  \end{cases}
+  \label{eq:opt}
+\end{equation}
+For linearized loss function, the solution is
+\begin{equation}
+x_{adv} = x + \epsilon\text{sign}(\nabla_x L(x,y)).
+  \label{eq:FGSM}
+\end{equation}
+Geometrically speaking, these attacks move the input image $x$ closer to the decision boundary between its target class $y$ and some other class. One option to combat these types of adversarial attacks is to regularize the decision boundaries associated with the classification tasks. That is, if we can make the decision boundaries less sensitive to small perturbations, we can mitigate the effects of these white-box attacks. To help conceptualize this idea, we reformulate the neural network classification problem into a neural ODE.  
 \subsection{ResNets as neural ODEs}
 We consider a residual network that is made up of a series of pre-activated residual blocks. Each block can be thought of as a layer that computes a residual mapping. The $l$-th residual block take in input $x_l$ and computes the mapping
 $$ x_{l+1} = x_{l} + F(x_l,\theta_l)$$
